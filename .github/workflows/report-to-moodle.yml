@@ -14,7 +14,7 @@ permissions:
 jobs:
   run-lint:
     if: ${{ !contains(github.actor, 'classroom') }}
-    name: lint
+    name: lint-the-changes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -32,7 +32,7 @@ jobs:
   report-to-moodle:
     needs: run-lint
     if: ${{ !contains(github.actor, 'classroom') }}
-    name: Autograding
+    name: report-to-moodle
     runs-on: ubuntu-latest
     steps:
       - name: export-grade
