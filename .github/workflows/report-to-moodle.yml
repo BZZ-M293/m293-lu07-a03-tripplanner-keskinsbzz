@@ -1,16 +1,16 @@
-# This workflow executes several linters on changed files based on languages used in your code base whenever
-# you push a code or open a pull request.
-#
-# You can adjust the behavior by modifying this file.
-# For more information, see:
-# https://github.com/github/super-linter
-name: Lint Code Base
+name: Report to Moodle Workflow incl Linter
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
 jobs:
   run-lint:
     runs-on: ubuntu-latest
@@ -27,3 +27,13 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "main"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  report-to-moodle:
+    needs: run-lint
+    if: ${{ !contains(github.actor, 'classroom') }}
+    name: Autograding
+    runs-on: ubuntu-latest
+    steps:
+      - name: export-grade
+        if: always()
+        run: |
+          curl -X POST "https://it.bzz.ch/fgitapi/gh_grade/${{ github.repository }}/1/1"
