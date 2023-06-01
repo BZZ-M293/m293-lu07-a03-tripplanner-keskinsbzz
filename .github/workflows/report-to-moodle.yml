@@ -13,6 +13,8 @@ permissions:
 
 jobs:
   run-lint:
+    if: ${{ !contains(github.actor, 'classroom') }}
+    name: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
